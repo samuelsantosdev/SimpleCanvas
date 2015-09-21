@@ -1,0 +1,3 @@
+var Dark = function(){
+
+};
