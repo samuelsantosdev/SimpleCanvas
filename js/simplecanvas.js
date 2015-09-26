@@ -61,7 +61,7 @@ HTMLElement.prototype.SimpleCanvas = function(config){
 				n++;
 				if(n == total){
 					console.log("Loading engine");
-					var eng = new Engine(ctx);
+					var eng = new Engine.context(ctx);
 					console.log("Engine load entities");
 					eng.loadEntities();
 					console.log("Engine load maps");

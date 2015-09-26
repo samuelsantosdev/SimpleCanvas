@@ -3,14 +3,55 @@ var Game = function(engine){
     this.engine = engine;
 
     this.main = function(){
+        try{
+            
+            var currentController = this, n=1;
+            var testing = function(){
+                if(n <= 100){
+                    currentController.painelScoreIncrement();
+                    currentController.painelRender();
+                    n++;
+                }
+                else
+                {
+                    clearInterval(tim);
+                    console.log('stopped');
+                }
+            }
+            var tim = setInterval(testing, 50);
 
-        this.painelRender();        
-
+            this.screenStart();
+        }
+        catch(ex)
+        {
+            console.log(ex);
+        }
     };
+
+    this.screenStart = function(){
+        try{
+            var h = this.engine.ctx.canvas.clientHeight;
+            var w = this.engine.ctx.canvas.clientWidth;
+
+            var s = Object.create(this.engine.entities.stage);
+            s.width = 500;
+            s.height = 470;
+            s.color = "#f60";
+            s.renderStage(this.engine.ctx);
+        }
+        catch(ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    this.painelScoreIncrement = function(){
+        this.engine.entities.painel.scoreGame += 1;
+    }
 
     this.painelRender = function(){
         try{
-            var p = this.engine.entities.painel;
+            var p = Object.create(this.engine.entities.painel);
 
             p.canvas.RectObj.x          =0;
             p.canvas.RectObj.y          =470;

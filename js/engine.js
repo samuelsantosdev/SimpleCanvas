@@ -1,4 +1,6 @@
-var Engine = function(ctx){
+var Engine = {};
+
+Engine.context = function(ctx){
 	
 	this.maps = {};
 	this.entities = {};

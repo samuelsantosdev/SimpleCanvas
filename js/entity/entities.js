@@ -1,11 +1,20 @@
 //Objects entity
-var Stage = function(width, height, color, mapList){
+var Stage = function(width, height, color){
 
     this.width   = width;
     this.height  = height;
-    this.color   = color;
-    this.mapList = mapList;    
+    this.color   = color;   
 
+    this.renderStage = function(ctx){
+      this.canvas.RectObj.x          =0;
+      this.canvas.RectObj.y          =0;
+      this.canvas.RectObj.width      =this.width;
+      this.canvas.RectObj.height     =this.height;
+      this.canvas.RectObj.bgColor    =this.color;
+      this.canvas.RectObj.lnWidth    =2;
+      this.canvas.RectObj.lnColor    ="#fff";
+      this.canvas.renderRect(ctx, this.canvas.RectObj);
+    }
 };
 
 
