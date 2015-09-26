@@ -19,10 +19,9 @@ var Map = function(speed, background){
 
 var Painel = function(score, size, speed){
 
-  this.scoreGame = score;
-  this.sizeSnake  = size;
-  this.speedSnake = speed;
-
+  this.scoreGame = (typeof score == 'undefined') ? 0 : score;
+  this.sizeSnake  = (typeof size == 'undefined') ? 0 : size;
+  this.speedSnake = (typeof speed == 'undefined') ? 0 : speed;
 };
 
 

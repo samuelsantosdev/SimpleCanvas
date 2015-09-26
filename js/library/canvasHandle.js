@@ -54,10 +54,21 @@ var CanvasHandle = function(){
   };
 
   this.renderText = function(ctx, TextObj){
+    if(typeof TextObj == 'string'){
+      ctx.beginPath();
+      ctx.fillStyle   =TextObj.bgColor;
+      ctx.font        =TextObj.font;
+      ctx.fillText(TextObj.text , TextObj.x, TextObj.y);
+      return 0;
+    }
+
     ctx.beginPath();
-    ctx.fillStyle   =TextObj.bgColor;
-    ctx.font        =TextObj.font;
-    ctx.fillText(TextObj.text , TextObj.x, TextObj.y);
+    for(idx in TextObj){
+      ctx.fillStyle   =TextObj[idx].bgColor;
+      ctx.font        =TextObj[idx].font;
+      ctx.fillText(TextObj[idx].text , TextObj[idx].x, TextObj[idx].y);
+    }
+
   };
 
 };

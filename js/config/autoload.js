@@ -1,5 +1,6 @@
 //Autoload 
 
-var entitiesLoad 	= {Stage, Painel};
+var entitiesLoad 	= {'stage':Stage, 'painel':Painel};
 var mapsLoad		= {};
-var controllersLoad = {Game};
+var controllersLoad = {'game':Game};
+var mainController	= {'game':Game};

@@ -56,13 +56,12 @@ HTMLElement.prototype.SimpleCanvas = function(config){
 			];
 
 			console.log("Importing js");
-			n = 0;
-			total = metaObjects.length;
+			var n = 0, total = metaObjects.length, startUpController;
 			this.importJs(metaObjects, function(imp){
 				n++;
 				if(n == total){
 					console.log("Loading engine");
-					var eng = new Engine();
+					var eng = new Engine(ctx);
 					console.log("Engine load entities");
 					eng.loadEntities();
 					console.log("Engine load maps");
@@ -70,6 +69,7 @@ HTMLElement.prototype.SimpleCanvas = function(config){
 					console.log("Engine load controllers");
 					eng.loadControllers();
 					console.log("Engine loaded");
+					eng.start();
 				}
 					
 			});
