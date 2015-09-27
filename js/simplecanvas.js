@@ -35,13 +35,16 @@ HTMLElement.prototype.SimpleCanvas = function(config){
 		try{
 			if(this.getElementCanvas().nodeName.toLowerCase() != 'canvas')
 				throw "This element is not a canvas";
-
+			this.getElementCanvas().style.cursor = "pointer";
+			this.getElementCanvas().style.cursor = "hand";
 			var ctx = this.getElementCanvas().getContext("2d");
 			var metaObjects = [
 				this.pathJs + "library/canvasHandle.js",
 				this.pathJs + "library/entityHandle.js",
 				this.pathJs + "library/mapHandle.js",
 				this.pathJs + "library/controllerHandle.js",
+				this.pathJs + "library/elementHandle.js",
+				this.pathJs + "library/eventElementHandle.js",
 
 				this.pathJs + "entity/entities.js",
 
@@ -56,19 +59,28 @@ HTMLElement.prototype.SimpleCanvas = function(config){
 			];
 
 			console.log("Importing js");
-			var n = 0, total = metaObjects.length, startUpController;
+			var n = 0, total = metaObjects.length;
 			this.importJs(metaObjects, function(imp){
 				n++;
 				if(n == total){
+
 					console.log("Loading engine");
 					var eng = new Engine.context(ctx);
+					
 					console.log("Engine load entities");
 					eng.loadEntities();
+					
 					console.log("Engine load maps");
 					eng.loadMaps();
+					
 					console.log("Engine load controllers");
 					eng.loadControllers();
+					
+					console.log("Engine load loadLibraries");
+					eng.loadLibraries();
+					
 					console.log("Engine loaded");
+					console.log(eng);
 					eng.start();
 				}
 					

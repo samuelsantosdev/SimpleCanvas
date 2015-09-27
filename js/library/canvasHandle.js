@@ -21,6 +21,9 @@ var CanvasHandle = function(){
     this.bgColor    ="#fff";
     this.lnColor    ="#fff";
     this.lnWidth    =1;
+
+    this.width      =function(){return this.radial * 2};
+    this.height     =function(){return this.radial * 2};
   };
   
   this.TextObj = function(){
@@ -29,6 +32,9 @@ var CanvasHandle = function(){
     this.bgColor    ="#fff";
     this.font       ="#fff";
     this.text       ="";
+
+    this.width      =function(){return this.radial * 2};
+    this.height     =function(){return this.radial * 2};
   };
 
 
@@ -54,14 +60,6 @@ var CanvasHandle = function(){
   };
 
   this.renderText = function(ctx, TextObj){
-    if(typeof TextObj == 'string'){
-      ctx.beginPath();
-      ctx.fillStyle   =TextObj.bgColor;
-      ctx.font        =TextObj.font;
-      ctx.fillText(TextObj.text , TextObj.x, TextObj.y);
-      return 0;
-    }
-
     ctx.beginPath();
     for(idx in TextObj){
       ctx.fillStyle   =TextObj[idx].bgColor;

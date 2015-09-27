@@ -1,0 +1,3 @@
+var ElementHandle = function(){
+	
+}

@@ -5,6 +5,7 @@ Engine.context = function(ctx){
 	this.maps = {};
 	this.entities = {};
 	this.controllers = {};
+	this.libraries = {};
 	this.ctx = ctx;
 
 	getCtx = function(){
@@ -104,6 +105,38 @@ Engine.context = function(ctx){
 	      	console.log(ex);
 	    }
 	};
+
+	this.loadLibraries = function(libraries){
+		try{
+      		switch(typeof libraries){
+				case'function':
+					libraries.prototype = new CanvasHandle();
+					name = Object.keys(libraries)[0];
+					this.libraries[name] = new libraries;
+				break;
+
+				case 'object':
+				for(idx in libraries){
+					libraries[idx].prototype = new CanvasHandle();
+					this.libraries[idx] = new libraries[idx];
+				}
+				break;
+
+				case 'undefined':
+				for(idx in librariesLoad){
+					librariesLoad[idx].prototype = new CanvasHandle();
+					this.libraries[idx] = new librariesLoad[idx];
+				}
+				break;
+				
+				default:
+					throw "Engine.loadLibraries: Type " + (typeof libraries) + " is not loadable";
+			}
+		} catch(ex) {
+	      	console.log(ex);
+	    }
+	};
+
 
 	this.start = function(){
 		try{
