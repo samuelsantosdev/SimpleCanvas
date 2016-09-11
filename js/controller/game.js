@@ -15,11 +15,11 @@ var Game = function(engine){
     };
 
     this.rulesGame = function(){
-        var mainController = this;
-        if( mainController.snakeBody.pieces[0].x < 0 || 
-            mainController.snakeBody.pieces[0].y < 0 || 
-            mainController.snakeBody.pieces[0].x > this.engine.ctx.canvas.clientWidth - mainController.snakeBody.config.size || 
-            mainController.snakeBody.pieces[0].y > this.engine.ctx.canvas.clientHeight - mainController.snakeBody.config.size)
+        
+        if( this.snakeBody.pieces[0].x < 0 || 
+            this.snakeBody.pieces[0].y < 0 || 
+            this.snakeBody.pieces[0].x > this.engine.ctx.canvas.clientWidth - this.snakeBody.config.size || 
+            this.snakeBody.pieces[0].y > this.engine.ctx.canvas.clientHeight - this.snakeBody.config.size)
         {
             clearInterval(this.time);
             var alert = this.engine.libraries.canvas.elements.TextObj;
@@ -28,8 +28,41 @@ var Game = function(engine){
             alert.bgColor    = "#fff";
             alert.font       = "20px Arial";
             alert.text       = "Fail - Enter to continue";
-            this.canvas.render(this.engine.ctx, alert);  
-            mainController.snakeBody.reset();
+            this.canvas.render(this.engine.ctx, alert);
+            this.snakeBody.reset();
+        }
+        
+        this.shortPiece.renderPiece(this);
+
+        if( this.snakeBody.pieces[0].x == this.shortPiece.piece.x 
+            && this.snakeBody.pieces[0].y == this.shortPiece.piece.y ){
+            this.shortPiece.piece = {};
+            this.shortPiece.renderPiece(this);                        
+        }
+        
+    }
+
+    this.shortPiece = {
+        piece : {
+        },
+        renderPiece : function(controller){
+            if(this.piece.x == undefined){
+                piecesX = controller.engine.ctx.canvas.clientWidth / controller.snakeBody.config.size;
+                piecesY = controller.engine.ctx.canvas.clientHeight / controller.snakeBody.config.size;
+                randPieceX = Math.floor((Math.random() * piecesX) + 1) * controller.snakeBody.config.size;
+                randPieceY = Math.floor((Math.random() * piecesY) + 1) * controller.snakeBody.config.size;
+
+                var newPiece       = Object.create(controller.engine.libraries.canvas.elements.RectObj);
+                newPiece.width     = controller.snakeBody.config.size;
+                newPiece.height    = controller.snakeBody.config.size;
+                newPiece.bgColor    = "#fff";
+                newPiece.lnWidth   = 2;
+                newPiece.lnColor   = "#fff";
+                newPiece.x         = randPieceX;
+                newPiece.y         = randPieceY;
+                this.piece    = newPiece;
+            }
+            controller.canvas.render(controller.engine.ctx, this.piece);
         }
     }
 
@@ -106,7 +139,7 @@ var Game = function(engine){
     }   
 
     this.snakeBody = {
-        config : {size : 10, speed : 200},
+        config : {size : 10, speed : 100},
         pieces : [],
         coordinatesChange : [{x:0, y:0}],
         directionSnake : {x:0, y:0},
