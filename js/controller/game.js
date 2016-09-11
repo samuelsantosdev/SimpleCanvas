@@ -33,12 +33,14 @@ var Game = function(engine){
         }
         
         this.shortPiece.renderPiece(this);
-
-        if( this.snakeBody.pieces[0].x == this.shortPiece.piece.x 
-            && this.snakeBody.pieces[0].y == this.shortPiece.piece.y ){
-            this.shortPiece.piece = {};
-            this.shortPiece.renderPiece(this);                        
-        }
+		
+		if(this.snakeBody.pieces.length != 0){
+			if( this.snakeBody.pieces[0].x == this.shortPiece.piece.x 
+				&& this.snakeBody.pieces[0].y == this.shortPiece.piece.y ){
+				this.shortPiece.piece = {};
+				this.shortPiece.renderPiece(this);                        
+			}
+		}
         
     }
 
@@ -55,11 +57,11 @@ var Game = function(engine){
                 var newPiece       = Object.create(controller.engine.libraries.canvas.elements.RectObj);
                 newPiece.width     = controller.snakeBody.config.size;
                 newPiece.height    = controller.snakeBody.config.size;
-                newPiece.bgColor    = "#fff";
+                newPiece.bgColor    = "#f00";
                 newPiece.lnWidth   = 2;
                 newPiece.lnColor   = "#fff";
-                newPiece.x         = randPieceX;
-                newPiece.y         = randPieceY;
+                newPiece.x         = randPieceX - controller.snakeBody.config.size;
+                newPiece.y         = randPieceY - controller.snakeBody.config.size;
                 this.piece    = newPiece;
             }
             controller.canvas.render(controller.engine.ctx, this.piece);
@@ -141,8 +143,6 @@ var Game = function(engine){
     this.snakeBody = {
         config : {size : 10, speed : 100},
         pieces : [],
-        coordinatesChange : [{x:0, y:0}],
-        directionSnake : {x:0, y:0},
         reset : function(){
             this.pieces = [];
             this.coordinatesChange = [{x:0, y:0}];
@@ -158,6 +158,7 @@ var Game = function(engine){
             snakePiece.lnColor    ="#000";
             snakePiece.x = 0;
             snakePiece.y = 0;
+			snakePiece.turn = [];
             
             this.pieces.push(snakePiece);
         },        
@@ -166,32 +167,82 @@ var Game = function(engine){
             if(this.pieces[0].x == 0 && this.pieces[0].y == 0){
                 this.pieces[0].x = ctx.canvas.clientWidth / 2; 
                 this.pieces[0].y = ctx.canvas.clientHeight / 2;
-            }
+				this.pieces[0].turn.push(
+						{x:undefined,y:undefined,moveX:undefined,moveY:undefined}
+					);
+			}
 
             for(var i = 0; i < this.pieces.length; i++){
                 
-                this.pieces[i].x = this.pieces[i].x - this.coordinatesChange[0].x;
-                this.pieces[i].y = this.pieces[i].y - this.coordinatesChange[0].y;
-                
+                this.pieces[i].x -= this.pieces[i].turn[0].moveX;
+                this.pieces[i].y -= this.pieces[i].turn[0].moveY;
+				if(this.pieces[i].x == this.pieces[i].turn[0].x &&
+					this.pieces[i].y == this.pieces[i].turn[0].y){
+					filtercoord = this.pieces[i].turn.slice(1, this.pieces[i].turn.length - 1);
+					this.pieces[i].turn = filtercoord;
+				}
                 hc.render(ctx, this.pieces[i]);
             }
         },
+		newTurn : {
+			x:0,
+			y:0,
+			moveX:0,
+			moveY:0
+		},
+		filterTurn : function(obj){
+			return 	obj.x 		!=	this.newTurn.x && 
+					obj.y 		!=	this.newTurn.y && 
+					obj.moveX 	!=	this.newTurn.moveX && 
+					obj.moveY 	!=	this.newTurn.moveY;
+		},
         moveLeft : function(){
-            this.coordinatesChange[0].x = this.config.size;
-            this.coordinatesChange[0].y = 0;
+			this.newTurn = {
+						x:this.pieces[lastIdx].x,
+						y:this.pieces[lastIdx].y,
+						moveX:this.config.size,
+						moveY:0
+					};
+			this.filterCoordenates();
         },
         moveRight : function(){
-            this.coordinatesChange[0].x = -this.config.size;
-            this.coordinatesChange[0].y = 0;
+            this.newTurn = {
+						x:this.pieces[lastIdx].x,
+						y:this.pieces[lastIdx].y,
+						moveX:-this.config.size,
+						moveY:0
+					};
+			this.filterCoordenates();
         },
         moveUp : function(){
-            this.coordinatesChange[0].x = 0;
-            this.coordinatesChange[0].y = this.config.size;
+            this.newTurn = {
+						x:this.pieces[lastIdx].x,
+						y:this.pieces[lastIdx].y,
+						moveX:0,
+						moveY:this.config.size
+					};
+			this.filterCoordenates();
         },
         moveDown : function(){
-            this.coordinatesChange[0].x = 0;
-            this.coordinatesChange[0].y = -this.config.size;
+            this.newTurn = {
+						x:this.pieces[lastIdx].x,
+						y:this.pieces[lastIdx].y,
+						moveX:0,
+						moveY:-this.config.size
+					};
+			this.filterCoordenates();
         },
+		filterCoordenates : function(){
+			lastIdx = this.pieces.length - 1;
+			if(this.pieces[lastIdx].turn.length > 0){
+				if(this.pieces[lastIdx].turn[0].moveY == undefined)
+					this.pieces[lastIdx].turn = [];
+			}
+			for(var k = 0; k < this.pieces.length; k++){
+				arrayClean = this.pieces[k].turn.filter(this.filterTurn);
+				this.pieces[k].turn = arrayClean;
+			}
+		},
         init : function(hc){
             this.pieces = [];
             this.addPiece(hc);
