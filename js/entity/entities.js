@@ -6,14 +6,15 @@ var Stage = function(width, height, color){
     this.color   = color;   
 
     this.renderStage = function(ctx){
-      this.canvas.RectObj.x          =0;
-      this.canvas.RectObj.y          =0;
-      this.canvas.RectObj.width      =this.width;
-      this.canvas.RectObj.height     =this.height;
-      this.canvas.RectObj.bgColor    =this.color;
-      this.canvas.RectObj.lnWidth    =2;
-      this.canvas.RectObj.lnColor    ="#fff";
-      this.canvas.renderRect(ctx, this.canvas.RectObj);
+      var stage = this.canvas.elements.RectObj;
+      stagex          =0;
+      stage.y          =0;
+      stage.width      =this.width;
+      stage.height     =this.height;
+      stage.bgColor    =this.color;
+      stage.lnWidth    =2;
+      stage.lnColor    ="#fff";
+      this.canvas.render(ctx, stage);
     }
 };
 

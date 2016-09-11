@@ -26,36 +26,48 @@
  * @Version: 0.1
  * @Release: 2015-09-21
  */
-HTMLElement.prototype.SimpleCanvas = function(config){
+HTMLElement.prototype.SimpleCanvas = function(config, callback){
 
 	this.elementCanvas 	= this;
-	this.pathJs 		= config.pathJs;
 
-	this.initalize = function(){
+	this.config = {
+		pathJs : window.location.href + '/js/'
+	}
+	
+	this.extends = function (configDefault, configCustom){
+	    var config = {};
+	    for (var attrname in configDefault) { config[attrname] = configDefault[attrname]; }
+	    for (var attrname in configCustom) { config[attrname] = configCustom[attrname]; }
+	    return config;
+	}
+
+	this.initalize = function(callback){
 		try{
+			this.config = this.extends(this.config, config);
+
 			if(this.getElementCanvas().nodeName.toLowerCase() != 'canvas')
 				throw "This element is not a canvas";
 			this.getElementCanvas().style.cursor = "pointer";
 			this.getElementCanvas().style.cursor = "hand";
 			var ctx = this.getElementCanvas().getContext("2d");
 			var metaObjects = [
-				this.pathJs + "library/canvasHandle.js",
-				this.pathJs + "library/entityHandle.js",
-				this.pathJs + "library/mapHandle.js",
-				this.pathJs + "library/controllerHandle.js",
-				this.pathJs + "library/elementHandle.js",
-				this.pathJs + "library/eventElementHandle.js",
+				this.config.pathJs + "library/canvasHandle.js",
+				this.config.pathJs + "library/entityHandle.js",
+				this.config.pathJs + "library/mapHandle.js",
+				this.config.pathJs + "library/controllerHandle.js",
+				this.config.pathJs + "library/elementHandle.js",
+				this.config.pathJs + "library/eventElementHandle.js",
 
-				this.pathJs + "entity/entities.js",
+				this.config.pathJs + "entity/entities.js",
 
-				this.pathJs + "map/blue.js",
-				this.pathJs + "map/dark.js",
-				this.pathJs + "map/white.js",
+				this.config.pathJs + "map/blue.js",
+				this.config.pathJs + "map/dark.js",
+				this.config.pathJs + "map/white.js",
 
-				this.pathJs + "controller/game.js",
+				this.config.pathJs + "controller/game.js",
 
-				this.pathJs + "config/autoload.js",
-				this.pathJs + "engine.js",
+				this.config.pathJs + "config/autoload.js",
+				this.config.pathJs + "engine.js",
 			];
 
 			console.log("Importing js");
@@ -80,7 +92,6 @@ HTMLElement.prototype.SimpleCanvas = function(config){
 					eng.loadLibraries();
 					
 					console.log("Engine loaded");
-					console.log(eng);
 					eng.start();
 				}
 					
@@ -122,7 +133,7 @@ HTMLElement.prototype.SimpleCanvas = function(config){
 	    				imported.onload = callback;
 
 			            document.head.appendChild(imported);
-		          	}
+		          	}		          	
 		        break;
 		        default:
 					throw "SimplesCanvas.importJs: Type " + (typeof path) + " is not importable";
