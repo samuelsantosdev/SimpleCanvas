@@ -55,7 +55,9 @@ var CanvasHandle = function(){
   this.render = function(ctx, obj){
 
     try{
-      
+
+      console.log(obj);
+
       switch(obj.name){
         case 'RectObj':
             ctx.beginPath();
@@ -78,12 +80,11 @@ var CanvasHandle = function(){
           break;
 
         case 'TextObj':
-            ctx.beginPath();
-            for(idx in obj){
-              ctx.fillStyle   =obj[idx].bgColor;
-              ctx.font        =obj[idx].font;
-              ctx.fillText(obj[idx].text , obj[idx].x, obj[idx].y);
-            }
+            ctx.beginPath();            
+            ctx.fillStyle   =obj.bgColor;
+            ctx.font        =obj.font;
+            ctx.fillText(obj.text , obj.x, obj.y);
+            
           break;
 
         default:
@@ -94,10 +95,18 @@ var CanvasHandle = function(){
     catch(ex){
       console.log(ex);
     }
-  }, 
+  }
 
   this.update = function(ctx, obj){
     this.render(ctx, obj);
+  }
+
+  this.destroy = function(ctx, obj){
+    ctx.clearRect(obj.x , obj.y, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+  }
+
+  this.clearAll = function(ctx){
+    ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
   }
 
 }
