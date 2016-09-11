@@ -18,8 +18,8 @@ var Game = function(engine){
         var mainController = this;
         if( mainController.snakeBody.pieces[0].x < 0 || 
             mainController.snakeBody.pieces[0].y < 0 || 
-            mainController.snakeBody.pieces[0].x > this.engine.ctx.canvas.clientWidth - 10 || 
-            mainController.snakeBody.pieces[0].y > this.engine.ctx.canvas.clientHeight - 10)
+            mainController.snakeBody.pieces[0].x > this.engine.ctx.canvas.clientWidth - mainController.snakeBody.config.size || 
+            mainController.snakeBody.pieces[0].y > this.engine.ctx.canvas.clientHeight - mainController.snakeBody.config.size)
         {
             clearInterval(this.time);
             var alert = this.engine.libraries.canvas.elements.TextObj;
@@ -52,10 +52,10 @@ var Game = function(engine){
                                 canvas.clearAll(ctx);
                                 mainController.snakeBody.init(hc);
                                 mainController.time = setInterval(function(){
-                                    canvas.clearAll(ctx);
+                                    canvas.fadeAll(ctx, mainController.snakeBody.config.speed);
                                     mainController.snakeBody.renderSnake(ctx, hc);
                                     mainController.rulesGame();
-                                }, 100);
+                                }, mainController.snakeBody.config.speed);
                             }
                         break;
                         case'ArrowUp':
@@ -106,19 +106,20 @@ var Game = function(engine){
     }   
 
     this.snakeBody = {
+        config : {size : 10, speed : 200},
         pieces : [],
-        coordinatesChange : {x:0, y:0},
+        coordinatesChange : [{x:0, y:0}],
         directionSnake : {x:0, y:0},
         reset : function(){
             this.pieces = [];
-            this.coordinatesChange = {x:0, y:0};
+            this.coordinatesChange = [{x:0, y:0}];
             this.directionSnake = {x:0, y:0};
         },
         addPiece : function(canvas){
             snakePiece = canvas.elements.RectObj;
 
-            snakePiece.width      =10;
-            snakePiece.height     =10;
+            snakePiece.width      =this.config.size;
+            snakePiece.height     =this.config.size;
             snakePiece.bgColor    ="#fff";
             snakePiece.lnWidth    =2;
             snakePiece.lnColor    ="#000";
@@ -136,27 +137,27 @@ var Game = function(engine){
 
             for(var i = 0; i < this.pieces.length; i++){
                 
-                this.pieces[i].x = this.pieces[i].x - this.coordinatesChange.x;
-                this.pieces[i].y = this.pieces[i].y - this.coordinatesChange.y;
+                this.pieces[i].x = this.pieces[i].x - this.coordinatesChange[0].x;
+                this.pieces[i].y = this.pieces[i].y - this.coordinatesChange[0].y;
                 
                 hc.render(ctx, this.pieces[i]);
             }
         },
         moveLeft : function(){
-            this.coordinatesChange.x = 5;
-            this.coordinatesChange.y = 0;
+            this.coordinatesChange[0].x = this.config.size;
+            this.coordinatesChange[0].y = 0;
         },
         moveRight : function(){
-            this.coordinatesChange.x = -5;
-            this.coordinatesChange.y = 0;
+            this.coordinatesChange[0].x = -this.config.size;
+            this.coordinatesChange[0].y = 0;
         },
         moveUp : function(){
-            this.coordinatesChange.x = 0;
-            this.coordinatesChange.y = 5;
+            this.coordinatesChange[0].x = 0;
+            this.coordinatesChange[0].y = this.config.size;
         },
         moveDown : function(){
-            this.coordinatesChange.x = 0;
-            this.coordinatesChange.y = -5;
+            this.coordinatesChange[0].x = 0;
+            this.coordinatesChange[0].y = -this.config.size;
         },
         init : function(hc){
             this.pieces = [];
