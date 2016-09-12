@@ -56,8 +56,6 @@ var CanvasHandle = function(){
 
     try{
 
-      console.log(obj);
-
       switch(obj.name){
         case 'RectObj':
             ctx.beginPath();
@@ -113,7 +111,6 @@ var CanvasHandle = function(){
 
   this.fadeAll = function(ctx, time){
     var op = ( (time / 2 + 10 ) / time);    
-    console.log(op);
     ctx.beginPath();
     ctx.fillStyle  = "rgba(0, 0, 0, " + op +")";
     ctx.rect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
