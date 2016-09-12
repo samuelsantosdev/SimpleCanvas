@@ -39,8 +39,8 @@ var Game = function(engine){
 				&& this.snakeBody.pieces[0].y == this.shortPiece.piece.y ){
 				this.shortPiece.piece = {};
 				this.shortPiece.renderPiece(this);                        
-                var hc = Object.create(this.engine.libraries.canvas);
-                this.snakeBody.addPiece(hc);
+               // var hc = Object.create(this.engine.libraries.canvas);
+                //this.snakeBody.addPiece(hc);
 			}
 		}
         
@@ -71,41 +71,41 @@ var Game = function(engine){
     }
 
     this.addEvents = function(){
-        var mainController = this;
-        var ctx = this.engine.ctx;
-        var canvas = this.canvas;
-        var s = Object.create(this.engine.entities.stage);
-        var hc = Object.create(this.engine.libraries.canvas);
+        var controller = this;
+        
         this.engine.libraries.event.addEvent(
-            s, 
+            controller.engine.entities.stage, 
             'keydown', 
-            this.engine.ctx.canvas, 
+            controller.engine.ctx.canvas, 
             function(keyPress)
                 {
                     console.log(keyPress.key);
                     switch(keyPress.key){
                         case'Enter':
-                            if(mainController.snakeBody.pieces.length == 0){
-                                canvas.clearAll(ctx);
-                                mainController.snakeBody.init(hc, mainController.engine.ctx.canvas);
-                                mainController.time = setInterval(function(){
-                                    canvas.fadeAll(ctx, mainController.snakeBody.config.speed);
-                                    mainController.snakeBody.renderSnake(ctx, hc);
-                                    mainController.rulesGame();
-                                }, mainController.snakeBody.config.speed);
+                            if(controller.snakeBody.pieces.length == 0){
+                                
+                                controller.engine.libraries.canvas.clearAll(controller.engine.ctx);
+                                controller.snakeBody.init(controller.engine, controller.snakeBody.moveLeft());
+
+                                controller.time = setInterval(function(){
+                                    controller.engine.libraries.canvas.fadeAll(controller.engine, controller.snakeBody.config.speed);
+                                    controller.snakeBody.renderSnake(controller.engine);
+                                    controller.rulesGame();
+                                }, controller.snakeBody.config.speed);
+
                             }
                         break;
                         case'ArrowUp':
-                            mainController.snakeBody.moveUp();
+                            controller.snakeBody.moveUp();
                         break;
                         case'ArrowDown':
-                            mainController.snakeBody.moveDown();
+                            controller.snakeBody.moveDown();
                         break;
                         case'ArrowLeft':
-                            mainController.snakeBody.moveLeft();
+                            controller.snakeBody.moveLeft();
                         break;
                         case'ArrowRight':
-                            mainController.snakeBody.moveRight();
+                            controller.snakeBody.moveRight();
                         break;
                     }
 
@@ -143,7 +143,7 @@ var Game = function(engine){
     }   
 
     this.snakeBody = {
-        config : {size : 10, speed : 200},
+        config : {size : 10, speed : 100},
         pieces : [],
         newTurn : {
             x:0,
@@ -151,53 +151,66 @@ var Game = function(engine){
             moveX:0,
             moveY:0
         },
+        centerX : 0,
+        centerY : 0,
         reset : function(){
             this.pieces = [];
             this.coordinatesChange = [{x:0, y:0}];
             this.directionSnake = {x:0, y:0};
         },
-        addPiece : function(canvas){
-            snakePiece = Object.create(canvas.elements.RectObj);
-            last = this.pieces.length -1;
-            lastX = this.pieces.length == 0 ? 0 : this.pieces[last].x -= this.pieces[last].turn[0].moveX;
-            lastY = this.pieces.length == 0 ? 0 : this.pieces[last].y -= this.pieces[last].turn[0].moveY;
-            
-            turnArr = [];
-            console.log(last);
-            if(last > -1){
-                idxTurn = this.pieces[last].turn.length;
-                if(idxTurn > 0)
-                    turnArr = this.pieces[last].turn;
-
-                console.log(turnArr);
+        pieceMove : function(snakePiece){
+            if(this.pieces.length == 0){
+                snakePiece.x = this.centerX;
+                snakePiece.y = this.centerY;
+                snakePiece.moveX = this.currentMoveX;
+                snakePiece.moveY = this.currentMoveY;
             }
-            snakePiece.width      =this.config.size;
-            snakePiece.height     =this.config.size;
-            snakePiece.bgColor    ="#fff";
-            snakePiece.lnWidth    =2;
-            snakePiece.lnColor    ="#000";
-            snakePiece.x          = lastX;
-            snakePiece.y          = lastY;
-			snakePiece.turn       = turnArr;
+            else
+            {
+                lastPiece = this.pieces.length - 1;
+                snakePiece.x = this.pieces[lastPiece].x -= this.pieces[lastPiece].moveX;
+                snakePiece.y = this.pieces[lastPiece].y -= this.pieces[lastPiece].moveY;
+                snakePiece.moveX = this.pieces[lastPiece].moveX;
+                snakePiece.moveY = this.pieces[lastPiece].moveY;
+            }
+            return snakePiece;
+        },
+        addPiece : function(engine){
+            snakePiece = Object.create(engine.libraries.canvas.elements.RectObj);
+            snakePiece.width      = this.config.size;
+            snakePiece.height     = this.config.size;
+            snakePiece.bgColor    = "#fff";
+            snakePiece.lnWidth    = 2;
+            snakePiece.lnColor    = "#000";
+            snakePiece.x          = 0;
+            snakePiece.y          = 0;
+            snakePiece.moveX      = 0;
+            snakePiece.moveY      = 0;
+			snakePiece.turn       = [];
             
+            snakePiece = this.pieceMove(snakePiece);
+
             this.pieces.push(snakePiece);
         },        
-        renderSnake : function(ctx, hc){
+        renderSnake : function(engine){
                 
             for(var i = 0; i < this.pieces.length; i++){
                 
-                if(this.pieces[i].turn.length == 0)
-                    continue;
+                this.pieces[i].x -= this.pieces[i].moveX;
+                this.pieces[i].y -= this.pieces[i].moveY;
 
-                this.pieces[i].x -= this.pieces[i].turn[0].moveX;
-                this.pieces[i].y -= this.pieces[i].turn[0].moveY;
+                engine.libraries.canvas.render(engine.ctx, this.pieces[i]);
 
-				if(this.pieces[i].x == this.pieces[i].turn[0].x &&
-					this.pieces[i].y == this.pieces[i].turn[0].y){
-					filtercoord = this.pieces[i].turn.slice(1, this.pieces[i].turn.length - 1);
-					this.pieces[i].turn = filtercoord;
-				}
-                hc.render(ctx, this.pieces[i]);
+                if(this.pieces[i].turn.length > 0){
+    				if(this.pieces[i].x == this.pieces[i].turn[0].x &&
+    					this.pieces[i].y == this.pieces[i].turn[0].y){
+
+    					filtercoord = this.pieces[i].turn.slice(1, this.pieces[i].turn.length - 1);
+    					this.pieces[i].turn = filtercoord;
+                        this.pieces[i].moveX = this.pieces[i].turn[0].moveX;
+                        this.pieces[i].moveY = this.pieces[i].turn[0].moveY;
+    				}                
+                }
             }
         },
 		filterTurn : function(arrayTurns){
@@ -209,63 +222,53 @@ var Game = function(engine){
             }   
 		},
         moveLeft : function(){
-            lastIdx = this.pieces.length > 1 ? this.pieces.length - 2 : 0;
-            this.newTurn = {
-						x:this.pieces[lastIdx].x,
-						y:this.pieces[lastIdx].y,
-						moveX:this.config.size,
-						moveY:0
-					};
+            this.currentMoveX = this.config.size;
+            this.currentMoveY = 0;            
 			this.filterCoordenates();
         },
         moveRight : function(){
-            lastIdx = this.pieces.length > 1 ? this.pieces.length - 2 : 0;
-            this.newTurn = {
-						x:this.pieces[lastIdx].x,
-						y:this.pieces[lastIdx].y,
-						moveX:-this.config.size,
-						moveY:0
-					};
+            this.currentMoveX = -this.config.size;
+            this.currentMoveY = 0;             
 			this.filterCoordenates();
         },
         moveUp : function(){
-            lastIdx = this.pieces.length > 1 ? this.pieces.length - 2 : 0;
-            this.newTurn = {
-						x:this.pieces[lastIdx].x,
-						y:this.pieces[lastIdx].y,
-						moveX:0,
-						moveY:this.config.size
-					};
+            this.currentMoveX = 0;
+            this.currentMoveY = this.config.size; 
 			this.filterCoordenates();
         },
         moveDown : function(){
-            lastIdx = this.pieces.length > 1 ? this.pieces.length - 2 : 0;
-            this.newTurn = {
-						x:this.pieces[lastIdx].x,
-						y:this.pieces[lastIdx].y,
-						moveX:0,
-						moveY:-this.config.size
-					};
+            this.currentMoveX = 0;
+            this.currentMoveY = -this.config.size; 
 			this.filterCoordenates();
         },
 		filterCoordenates : function(){
-            if(this.pieces[0].turn.length > 0){
-    			this.pieces[0].turn[0].moveX = this.newTurn.moveX;
-                this.pieces[0].turn[0].moveY = this.newTurn.moveY;
-            }
-            else{
+            lastIdx = this.pieces.length - 1;
+            if(lastIdx > 1){
+                this.newTurn = {
+                            x:this.pieces[lastIdx].x,
+                            y:this.pieces[lastIdx].y,
+                            moveX:this.currentMoveX,
+                            moveY:this.currentMoveY
+                        };
+                
                 this.pieces[0].turn.push(this.newTurn);
+                for(var k = 1; k < this.pieces.length; k++){
+                    this.pieces[k].turn.push(this.newTurn);
+                }
             }
-			for(var k = 1; k < this.pieces.length; k++){
-                this.pieces[k].turn.push(this.newTurn);
-			}
+
+            if(lastIdx > -1){
+                this.pieces[lastIdx].moveX = this.currentMoveX;
+                this.pieces[lastIdx].moveY = this.currentMoveY;
+            }
+			
 		},
-        init : function(hc, canvas){
+        init : function(engine, move){
             this.pieces = [];
-            this.addPiece(hc);
-            this.pieces[0].x = canvas.clientWidth / 2;
-            this.pieces[0].y = canvas.clientHeight / 2;                
-            this.moveLeft();
+            this.centerX = engine.ctx.canvas.clientWidth / 2;
+            this.centerY = engine.ctx.canvas.clientHeight / 2;
+            move;
+            this.addPiece(engine);
         }
 
 

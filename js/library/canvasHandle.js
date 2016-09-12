@@ -109,12 +109,11 @@ var CanvasHandle = function(){
     ctx.fill();
   }
 
-  this.fadeAll = function(ctx, time){
+  this.fadeAll = function(engine, time){
     var op = ( (time / 2 + 10 ) / time);    
-    ctx.beginPath();
-    ctx.fillStyle  = "rgba(0, 0, 0, " + op +")";
-    ctx.rect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-    ctx.fill();
+    engine.ctx.fillStyle  = "rgba(0, 0, 0, " + op +")";
+    engine.ctx.rect(0, 0, engine.ctx.canvas.clientWidth, engine.ctx.canvas.clientHeight);
+    engine.ctx.fill();
   }
 
 }
