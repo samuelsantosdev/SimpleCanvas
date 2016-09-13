@@ -119,6 +119,9 @@ var Game = function(engine){
                         case'Control':
                             clearInterval(controller.time);
                         break;
+                        case 'Shift':
+                            controller.snakeBody.addPiece(controller.engine);
+                            break;
                     }
 
                 }
