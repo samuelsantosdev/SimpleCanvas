@@ -32,9 +32,11 @@
 </center>
   <script src="https://rawgit.com/samuelsantosdev/SimpleCanvas/master/js/simplecanvas.js"></script>
   <script>
-  	var canvas = document.querySelector("#stageGame");
-  	canvas.SimpleCanvas();
-  	canvas.initalize();
+    (function() {
+    	var canvas = document.querySelector("#stageGame");
+    	canvas.SimpleCanvas();
+    	canvas.initalize();
+    });
   </script>
 <br/>
 <table>
