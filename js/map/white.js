@@ -1,3 +1,5 @@
-var White = function(){
-
-};
+White = function(){
+	return White = {
+		
+	}
+}

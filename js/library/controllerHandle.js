@@ -1,8 +1,8 @@
-var ControllerHandle = function(){
+Engine.Libraries['ControllerHandle'] = function(){
+	return ControllerHandle = {
+		//Engine : Engine		
+	}  
 
-  this.engine = new Engine.context();
-  this.canvas = new CanvasHandle();
-
-};
+}
 
 

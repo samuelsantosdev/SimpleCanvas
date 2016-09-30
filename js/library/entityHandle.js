@@ -1,6 +1,5 @@
-
-var EntityHandle = function(){
-
-  this.canvas = new CanvasHandle();
-
-};
+Engine.Libraries['EntityHandle'] = function(){
+	return EntityHandle = {
+		//this.canvas = new CanvasHandle();
+	}  
+}

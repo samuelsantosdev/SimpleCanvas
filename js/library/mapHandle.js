@@ -1,3 +1,5 @@
-var MapHandle = function(){
-	
-};
+Engine.Libraries['MapHandle'] = function(){
+	return MapHandle = {
+
+	}	
+}

@@ -1,0 +1,6 @@
+{	
+	"Entity" 		: [],
+	"Map"			: [],
+	"Controller" 	: ["Game"],
+	"Library"		: ["EventElementHandle"]
+}

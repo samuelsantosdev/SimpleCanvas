@@ -1,3 +1,5 @@
-var Dark = function(){
-
-};
+Dark = function(){
+	return Dark = {
+		
+	}
+}

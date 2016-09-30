@@ -1,0 +1,4 @@
+{	
+	"Core"	: ["Engine"],
+	"Library" : ["CanvasHandle", "ControllerHandle"]
+}
