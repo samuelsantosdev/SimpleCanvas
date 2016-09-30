@@ -1,0 +1,20 @@
+{
+  "name": "SimpleCanvas",
+  "version": "0.2.1",
+  "description": "This is a SimpleCanvas, coming soon the more easy html5 framework to learn Canvas 2d.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samuelsantosdev/SimpleCanvas.git"
+  },
+  "author": "Samuel Santos <samuelsantosdev@gmail.com>",
+  "maintainers": "Samuel Santos <samuelsantosdev@gmail.com>",
+  "licenses": ["MIT"],
+  "dependencies": {
+    "jasmine-node": ">=1.3.1",
+    "jquery": ">=1.8.3",
+    "jasmine-jquery": ">=1.3.3"
+  },
+  "scripts": {
+    "test": "jasmine-node spec"
+  }
+}
