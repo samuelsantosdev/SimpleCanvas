@@ -1,0 +1,6 @@
+{
+  "name": "SimpleCanvas",
+  "tagline": "Simple Canvas",
+  "body": "# SimpleCanvas\r\n## Example snake game\r\n### This is a SimpleCanvas, coming soon the more easy html5 framework  to learn Canvas 2d.\r\n![Snake game](https://raw.githubusercontent.com/samuelsantosdev/SimpleCanvas/master/img/gamesnake.png \"Snake game\")\r\n\r\n|Version|Features|\r\n|---|---|\r\n|0.1|Render shapes and animate objects, example game snake|\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
