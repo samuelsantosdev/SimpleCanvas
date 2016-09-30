@@ -259,7 +259,7 @@ Engine.Libraries['CanvasHandle'] = function(){
     FadeCanvas : function(time){
       var op = ( (time / 2 + 10 ) / time);    
       CanvasHandle.Context.fillStyle  = "rgba(0, 0, 0, " + op +")";
-      CanvasHandle.Context.rect(0, 0, this.Context.canvas.clientWidth, this.Context.canvas.clientHeight);
+      CanvasHandle.Context.rect(0, 0, CanvasHandle.Context.canvas.clientWidth, CanvasHandle.Context.canvas.clientHeight);
       CanvasHandle.Context.fill();
     }
     

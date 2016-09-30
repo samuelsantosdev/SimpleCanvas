@@ -137,15 +137,19 @@ Engine.Controllers['Game'] = function(){
 
                             break;
                             case'ArrowUp':
+                            case'Up':
                                 Game.Snake.MoveUp();
                             break;
                             case'ArrowDown':
+                            case'Down':
                                 Game.Snake.MoveDown();
                             break;
                             case'ArrowLeft':
+                            case'Left':
                                 Game.Snake.MoveLeft();
                             break;
                             case'ArrowRight':
+                            case'Right':
                                 Game.Snake.MoveRight();
                             break;
                             case'Control':
