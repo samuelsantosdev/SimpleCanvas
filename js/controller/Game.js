@@ -29,13 +29,22 @@ Engine.Controllers['Game'] = function(){
                             y : randPieceY - Game.Snake.config.size, 
                             width : Game.Snake.config.size, 
                             height : Game.Snake.config.size, 
-                            bgColor : "#f00", 
+                            bgColor : "#f60", 
                             lnColor : "#fff", 
                             lnWidth : 2
                         });
                     
                     Engine.AddObjectRender('piece', newPiece);
                     this.piece    = newPiece;
+
+                    f = new Engine.Shapes
+                    .Animation({
+                        shape : this.piece , 
+                        x : newPiece.x, 
+                        y : newPiece.y, 
+                        time : 500, 
+                        toColor : "rgba(255, 255, 255, 0.5)"}).start();
+                    
                 }
             }
         },
@@ -107,10 +116,10 @@ Engine.Controllers['Game'] = function(){
                 function(keyPress)
                     {
                         //Key Pressed
-                        console.log(keyPress.key);
+                        console.log(keyPress.key);                        
                         switch(keyPress.key){
                             case'Enter':
-                                
+                                keyPress.preventDefault();
                                 //if no exists a snake
                                 if(Game.Snake.pieces.length == 0){
 
@@ -138,21 +147,26 @@ Engine.Controllers['Game'] = function(){
                             break;
                             case'ArrowUp':
                             case'Up':
+                                keyPress.preventDefault();
                                 Game.Snake.MoveUp();
                             break;
                             case'ArrowDown':
                             case'Down':
+                                keyPress.preventDefault();
                                 Game.Snake.MoveDown();
                             break;
                             case'ArrowLeft':
                             case'Left':
+                                keyPress.preventDefault();
                                 Game.Snake.MoveLeft();
                             break;
                             case'ArrowRight':
                             case'Right':
+                                keyPress.preventDefault();
                                 Game.Snake.MoveRight();
                             break;
-                            case'Control':
+                            case'Escape':
+                                keyPress.preventDefault();
                                 clearInterval(Game.Interval);
                             break;
                         }
@@ -171,9 +185,9 @@ Engine.Controllers['Game'] = function(){
                 h = Engine.Context.Canvas.clientHeight;
 
                 // declare all elements
-                var stage = new Engine.Shapes.Square({x:0, y:0, width:w, height:h, bgColor:"rgba(100, 100, 100, 1)", lnColor:"#fff", lnWidth:0});
-                var button = new Engine.Shapes.Text({x:(w/2 - 30), y:0, bgColor:"rgba(255, 255, 255, 0)", font:"20px Arial", text:"Enter"});
-                var alert = new Engine.Shapes.Text({x:(w / 2 - 100), y:(h / 2), bgColor:"#fff", font:"20px Arial", text:"Fail - Enter to continue"});
+                var stage = new Engine.Shapes.Square({x:0, y:0, width:w, height:h, bgColor:"rgba(0, 0, 0, 1)", lnColor:"#fff", lnWidth:0});
+                var button = new Engine.Shapes.Text({x:(w/2 - 50), y:0, bgColor:"rgba(255, 255, 255, 0)", font:"20px Arial", text:"Press Enter"});
+                var alert = new Engine.Shapes.Text({x:(w / 2 - 100), y:(h / 2), bgColor:"#fff", font:"20px Arial", text:":( Ops - Enter to continue"});
 
                 //Add elements in order of renderization
                 Engine.AddObjectRender('Stage', stage);
@@ -189,7 +203,7 @@ Engine.Controllers['Game'] = function(){
                 });
 
                 //Animation of button start
-                f = new Engine.Shapes.Animation({shape : button, x : button.x, y : (h/2), time:1000, toColor:"rgba(255, 255, 255, 1)"},
+                f = new Engine.Shapes.Animation({shape : button, x : button.x, y : (h/2), time:500, toColor:"rgba(255, 255, 255, 1)"},
                     function(){
                         Game.AddEvents();
                     });

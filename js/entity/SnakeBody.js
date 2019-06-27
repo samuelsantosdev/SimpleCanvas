@@ -4,7 +4,7 @@ Engine.Entities['SnakeBody'] = function(){
     return SnakeBody = {
 
         //Config params
-        config : {size : 10, speed : 200},
+        config : {size : 10, speed : 150},
 
         //pieces of body
         pieces : [],
@@ -33,6 +33,9 @@ Engine.Entities['SnakeBody'] = function(){
 
         //set coordinates to a new piece of snake
         PieceMove : function(snakePiece){
+            
+            lastPiece = SnakeBody.pieces.length - 1;
+
             if(SnakeBody.pieces.length == 0){
                 snakePiece.x = SnakeBody.centerX;
                 snakePiece.y = SnakeBody.centerY;
@@ -41,14 +44,12 @@ Engine.Entities['SnakeBody'] = function(){
             }
             else
             {
-                lastPiece = SnakeBody.pieces.length - 1;
-
                 snakePiece.x = SnakeBody.pieces[lastPiece].x + SnakeBody.pieces[lastPiece].moveX;
                 snakePiece.y = SnakeBody.pieces[lastPiece].y + SnakeBody.pieces[lastPiece].moveY;
                 snakePiece.moveX = SnakeBody.pieces[lastPiece].moveX;
                 snakePiece.moveY = SnakeBody.pieces[lastPiece].moveY;
             }
-            
+
             return snakePiece;
         },
 
@@ -59,19 +60,26 @@ Engine.Entities['SnakeBody'] = function(){
                     y: 0, 
                     width: SnakeBody.config.size, 
                     height: SnakeBody.config.size, 
-                    bgColor: "#fff", 
-                    lnColor: "#000", 
-                    lnWidth: 2
+                    bgColor: "rgba(255, 255, 255, 1)", 
+                    lnColor: "#fff", 
+                    lnWidth: 1
                 };
             
             snakePiece = new Engine.Shapes.Square(piecedata);
-            snakePiece.bgColor = "#fff";
+            snakePiece.bgColor = "rgba(255, 255, 255, 0.5)";
             snakePiece.moveX = 0;
             snakePiece.moveY = 0;
             snakePiece = SnakeBody.PieceMove(snakePiece);
 
             Engine.AddObjectRender('snake'+SnakeBody.pieces.length, snakePiece);
+
+            SnakeBody.pieces.map(function(obj){
+                obj.bgColor="rgba(255, 255, 255, 1)";
+                return obj;
+            });
+
             SnakeBody.pieces.push(snakePiece);
+            return SnakeBody.pieces[SnakeBody.pieces.length - 1];
         },  
 
         //set the next coordinates to all pieces of snake
