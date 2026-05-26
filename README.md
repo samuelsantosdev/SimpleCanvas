@@ -7,5 +7,6 @@
 
 |Version|Features|
 |---|---|
+|0.3|Modernize and fix cdn issues|
 |0.2|New Engine with a singleton concept, comments in code, prototype in all metadata, effects transition to colors, animation to multple coordenates, simple animation|
 |0.1|Render shapes and animate objects, example game snake|
