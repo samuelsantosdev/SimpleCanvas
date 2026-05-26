@@ -29,9 +29,12 @@ Engine.Controllers['Game'] = function(){
                             y : randPieceY - Game.Snake.config.size, 
                             width : Game.Snake.config.size, 
                             height : Game.Snake.config.size, 
-                            bgColor : "#f60", 
-                            lnColor : "#fff", 
-                            lnWidth : 2
+                            bgColor : "rgba(255, 64, 129, 1)", 
+                            lnColor : "transparent", 
+                            lnWidth : 0,
+                            radius  : Math.floor(Game.Snake.config.size / 2),
+                            shadowColor : "#ff4081",
+                            shadowBlur  : 22
                         });
                     
                     Engine.AddObjectRender('piece', newPiece);
@@ -43,7 +46,7 @@ Engine.Controllers['Game'] = function(){
                         x : newPiece.x, 
                         y : newPiece.y, 
                         time : 500, 
-                        toColor : "rgba(255, 255, 255, 0.5)"}).start();
+                        toColor : "rgba(255, 64, 129, 1)"}).start();
                     
                 }
             }
@@ -185,9 +188,9 @@ Engine.Controllers['Game'] = function(){
                 h = Engine.Context.Canvas.clientHeight;
 
                 // declare all elements
-                var stage = new Engine.Shapes.Square({x:0, y:0, width:w, height:h, bgColor:"rgba(0, 0, 0, 1)", lnColor:"#fff", lnWidth:0});
-                var button = new Engine.Shapes.Text({x:(w/2 - 50), y:0, bgColor:"rgba(255, 255, 255, 0)", font:"20px Arial", text:"Press Enter"});
-                var alert = new Engine.Shapes.Text({x:(w / 2 - 100), y:(h / 2), bgColor:"#fff", font:"20px Arial", text:":( Ops - Enter to continue"});
+                var stage = new Engine.Shapes.Square({x:0, y:0, width:w, height:h, bgColor:"rgba(8, 12, 20, 1)", lnColor:"transparent", lnWidth:0});
+                var button = new Engine.Shapes.Text({x:(w/2 - 80), y:0, bgColor:"rgba(57, 255, 20, 0)", font:"bold 16px 'Courier New', monospace", text:"▶  PRESS ENTER"});
+                var alert = new Engine.Shapes.Text({x:(w / 2 - 140), y:(h / 2), bgColor:"rgba(255, 64, 129, 1)", font:"bold 16px 'Courier New', monospace", text:"GAME OVER  ✦  ENTER to restart"});
 
                 //Add elements in order of renderization
                 Engine.AddObjectRender('Stage', stage);
@@ -203,7 +206,7 @@ Engine.Controllers['Game'] = function(){
                 });
 
                 //Animation of button start
-                f = new Engine.Shapes.Animation({shape : button, x : button.x, y : (h/2), time:500, toColor:"rgba(255, 255, 255, 1)"},
+                f = new Engine.Shapes.Animation({shape : button, x : button.x, y : (h/2), time:500, toColor:"rgba(57, 255, 20, 1)"},
                     function(){
                         Game.AddEvents();
                     });

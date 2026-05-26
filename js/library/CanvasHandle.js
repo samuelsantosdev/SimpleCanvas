@@ -33,6 +33,9 @@ Engine.Libraries['CanvasHandle'] = function(){
         this.lnColor    = shapeCfg.lnColor;
         this.lnWidth    = shapeCfg.lnWidth;
         this.position   = shapeCfg.position;
+        this.radius     = shapeCfg.radius     || 0;
+        this.shadowColor = shapeCfg.shadowColor || null;
+        this.shadowBlur  = shapeCfg.shadowBlur  || 0;
         
         //Insert deafult properties in object
         context = new CanvasHandle.Shapes.ContextShape();
@@ -95,11 +98,33 @@ Engine.Libraries['CanvasHandle'] = function(){
               case 'Square':
                   CanvasHandle.Context.beginPath();
                   CanvasHandle.Context.fillStyle   = Engine.Helper.CorrectRGB(shape.bgColor);
-                  CanvasHandle.Context.lineStyle   = shape.lnColor;
+                  CanvasHandle.Context.strokeStyle = shape.lnColor;
                   CanvasHandle.Context.lineWidth   = shape.lnWidth;
-                  CanvasHandle.Context.rect(shape.x,shape.y,shape.width,shape.height);
+                  if (shape.shadowColor) {
+                    CanvasHandle.Context.shadowColor = shape.shadowColor;
+                    CanvasHandle.Context.shadowBlur  = shape.shadowBlur || 12;
+                  }
+                  var rx = shape.radius || 0;
+                  var sx = shape.x, sy = shape.y, sw = shape.width, sh = shape.height;
+                  if (rx > 0) {
+                    rx = Math.min(rx, sw / 2, sh / 2);
+                    CanvasHandle.Context.moveTo(sx + rx, sy);
+                    CanvasHandle.Context.lineTo(sx + sw - rx, sy);
+                    CanvasHandle.Context.arcTo(sx + sw, sy,      sx + sw, sy + rx,      rx);
+                    CanvasHandle.Context.lineTo(sx + sw, sy + sh - rx);
+                    CanvasHandle.Context.arcTo(sx + sw, sy + sh, sx + sw - rx, sy + sh, rx);
+                    CanvasHandle.Context.lineTo(sx + rx, sy + sh);
+                    CanvasHandle.Context.arcTo(sx,       sy + sh, sx,       sy + sh - rx, rx);
+                    CanvasHandle.Context.lineTo(sx, sy + rx);
+                    CanvasHandle.Context.arcTo(sx,       sy,      sx + rx,  sy,           rx);
+                    CanvasHandle.Context.closePath();
+                  } else {
+                    CanvasHandle.Context.rect(sx, sy, sw, sh);
+                  }
                   CanvasHandle.Context.fill();
-                  CanvasHandle.Context.stroke();
+                  if (shape.lnWidth > 0) CanvasHandle.Context.stroke();
+                  CanvasHandle.Context.shadowBlur  = 0;
+                  CanvasHandle.Context.shadowColor = 'transparent';
                 break;
               case 'Circle':
                   CanvasHandle.Context.beginPath();

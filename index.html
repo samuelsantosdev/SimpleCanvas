@@ -1,70 +1,300 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>SimpleCanvas by samuelsantosdev</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">SimpleCanvas</h1>
-      <h2 class="project-tagline">Simple Canvas</h2>
-      <a href="https://github.com/samuelsantosdev/SimpleCanvas" class="btn">View on GitHub</a>
-      <a href="https://github.com/samuelsantosdev/SimpleCanvas/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/samuelsantosdev/SimpleCanvas/tarball/master" class="btn">Download .tar.gz</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SimpleCanvas – Snake Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #080c14;
+      color: #c5cfe8;
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 40px 24px 0;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(57,255,20,0.08);
+      border: 1px solid rgba(57,255,20,0.25);
+      color: #39ff14;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1.site-title {
+      font-size: clamp(38px, 6vw, 68px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+    }
+
+    h1.site-title span { color: #39ff14; }
+
+    .tagline {
+      margin-top: 10px;
+      color: #4a5e72;
+      font-size: 14px;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.5px;
+    }
+
+    .header-links {
+      margin-top: 22px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      text-decoration: none;
+      transition: 0.2s;
+      border: 1.5px solid;
+    }
+
+    .btn-primary {
+      background: rgba(57,255,20,0.1);
+      border-color: rgba(57,255,20,0.45);
+      color: #39ff14;
+    }
+    .btn-primary:hover {
+      background: rgba(57,255,20,0.2);
+      border-color: #39ff14;
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.1);
+      color: #8899aa;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.2);
+      color: #c5cfe8;
+    }
+
+    /* Canvas */
+    .canvas-section {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      display: inline-block;
+      border-radius: 12px;
+      padding: 3px;
+      background: linear-gradient(135deg, rgba(57,255,20,0.35), rgba(0,180,100,0.12), rgba(57,255,20,0.04));
+      box-shadow: 0 0 40px rgba(57,255,20,0.08), 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    #stageGame {
+      display: block;
+      border-radius: 10px;
+      max-width: 100%;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 18px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .control-key {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: #4a5e72;
+    }
+
+    .key {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #0d1525;
+      border: 1px solid #1c2d45;
+      border-bottom: 3px solid #1c2d45;
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: #39ff14;
+      min-width: 34px;
+    }
+
+    /* Info */
+    .info-section {
+      max-width: 620px;
+      margin: 56px auto 0;
+      padding: 0 24px;
+    }
+
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #39ff14;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      opacity: 0.8;
+    }
+
+    p.description {
+      font-size: 15px;
+      line-height: 1.85;
+      color: #637282;
+    }
+
+    .versions {
+      margin-top: 36px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead th {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #39ff14;
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(57,255,20,0.18);
+      opacity: 0.8;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      color: #637282;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    tbody td:first-child {
+      color: #c5cfe8;
+      font-family: 'Share Tech Mono', monospace;
+      white-space: nowrap;
+    }
+
+    tbody tr:hover td { background: rgba(57,255,20,0.025); }
+
+    footer {
+      margin-top: 64px;
+      padding: 28px 24px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    footer p {
+      font-size: 12px;
+      color: #2e3d50;
+      font-family: 'Share Tech Mono', monospace;
+      line-height: 1.8;
+    }
+
+    footer a { color: #39ff14; text-decoration: none; opacity: 0.7; }
+    footer a:hover { opacity: 1; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">open source &middot; canvas 2d engine</div>
+    <h1 class="site-title">Simple<span>Canvas</span></h1>
+    <p class="tagline">// a lightweight HTML5 Canvas 2D framework</p>
+    <div class="header-links">
+      <a href="https://github.com/samuelsantosdev/SimpleCanvas" class="btn btn-primary">&#9095; View on GitHub</a>
+      <a href="https://github.com/samuelsantosdev/SimpleCanvas/zipball/master" class="btn btn-secondary">&#8595; Download .zip</a>
+      <a href="https://github.com/samuelsantosdev/SimpleCanvas/tarball/master" class="btn btn-secondary">&#8595; Download .tar.gz</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="canvas-section">
+      <div class="canvas-wrapper">
+        <canvas id="stageGame" width="500" height="500"></canvas>
+      </div>
+      <div class="controls">
+        <div class="control-key"><span class="key">&#8593; &#8595; &#8592; &#8594;</span>&nbsp;Move</div>
+        <div class="control-key"><span class="key">Enter</span>&nbsp;Start / Restart</div>
+        <div class="control-key"><span class="key">Esc</span>&nbsp;Pause</div>
+      </div>
     </section>
 
-    <section class="main-content">
-      <h1>
-<a id="simplecanvas" class="anchor" href="#simplecanvas" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SimpleCanvas</h1>
-
-<h2>
-<a id="example-snake-game" class="anchor" href="#example-snake-game" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example snake game</h2>
-
-<h3>
-<a id="this-is-a-simplecanvas-coming-soon-the-more-easy-html5-framework--to-learn-canvas-2d" class="anchor" href="#this-is-a-simplecanvas-coming-soon-the-more-easy-html5-framework--to-learn-canvas-2d" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>This is a SimpleCanvas, coming soon the more easy html5 framework  to learn Canvas 2d.</h3>
-
-<center>
-<canvas id="stageGame" width="500" height="500" style="background-color:#000;"></canvas>
-</center>
-  
-<br/>
-<table>
-<thead>
-<tr>
-<th>Version</th>
-<th>Features</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0.2</td>
-<td>New Engine with a singleton concept, comments in code, prototype in all metadata, effects transition to colors, animation to multple coordenates, simple animation</td>
-</tr>
-<tr>
-<td>0.1</td>
-<td>Render shapes and animate objects, example game snake</td>
-</tr>
-</tbody>
-</table>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/samuelsantosdev/SimpleCanvas">SimpleCanvas</a> is maintained by <a href="https://github.com/samuelsantosdev">samuelsantosdev</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
+    <section class="info-section">
+      <p class="section-label">// about</p>
+      <p class="description">
+        SimpleCanvas is a lightweight HTML5 Canvas 2D engine that simplifies creating
+        games and interactive graphics. The snake game above demonstrates its animation,
+        entity, and event systems working together.
+      </p>
+      <div class="versions">
+        <table>
+          <thead>
+            <tr><th>Version</th><th>Features</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>v0.2</td>
+              <td>New Engine with singleton concept, code comments, prototype on all metadata, color transition effects, multi-coordinate animations, simple animation system</td>
+            </tr>
+            <tr>
+              <td>v0.1</td>
+              <td>Render shapes and animate objects — example snake game</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
+  </main>
 
-  
-  </body>
-  <script src="https://rawgit.com/samuelsantosdev/SimpleCanvas/master/js/simplecanvas.js"></script>
+  <footer>
+    <p>
+      <a href="https://github.com/samuelsantosdev/SimpleCanvas">SimpleCanvas</a> is maintained by
+      <a href="https://github.com/samuelsantosdev">samuelsantosdev</a><br>
+      Generated by <a href="https://pages.github.com">GitHub Pages</a>
+    </p>
+  </footer>
+
+  <script src="js/simplecanvas.js"></script>
   <script>
     const canvas = document.querySelector("#stageGame");
     canvas.SimpleCanvas().Initialize();
   </script>
+</body>
 </html>

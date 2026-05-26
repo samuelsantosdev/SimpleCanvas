@@ -4,7 +4,7 @@ Engine.Entities['SnakeBody'] = function(){
     return SnakeBody = {
 
         //Config params
-        config : {size : 10, speed : 150},
+        config : {size : 14, speed : 150},
 
         //pieces of body
         pieces : [],
@@ -60,23 +60,20 @@ Engine.Entities['SnakeBody'] = function(){
                     y: 0, 
                     width: SnakeBody.config.size, 
                     height: SnakeBody.config.size, 
-                    bgColor: "rgba(255, 255, 255, 1)", 
-                    lnColor: "#fff", 
-                    lnWidth: 1
+                    bgColor: "rgba(57, 255, 20, 1)", 
+                    lnColor: "transparent", 
+                    lnWidth: 0,
+                    radius: Math.floor(SnakeBody.config.size / 2),
+                    shadowColor: "#39ff14",
+                    shadowBlur: 16
                 };
             
             snakePiece = new Engine.Shapes.Square(piecedata);
-            snakePiece.bgColor = "rgba(255, 255, 255, 0.5)";
             snakePiece.moveX = 0;
             snakePiece.moveY = 0;
             snakePiece = SnakeBody.PieceMove(snakePiece);
 
             Engine.AddObjectRender('snake'+SnakeBody.pieces.length, snakePiece);
-
-            SnakeBody.pieces.map(function(obj){
-                obj.bgColor="rgba(255, 255, 255, 1)";
-                return obj;
-            });
 
             SnakeBody.pieces.push(snakePiece);
             return SnakeBody.pieces[SnakeBody.pieces.length - 1];
@@ -98,6 +95,18 @@ Engine.Entities['SnakeBody'] = function(){
                     SnakeBody.pieces[invert].moveX = SnakeBody.pieces[invert-1].moveX;
                     SnakeBody.pieces[invert].moveY = SnakeBody.pieces[invert-1].moveY ;
                 }                
+            }
+
+            // Apply neon gradient: head (index 0) = bright #39ff14, tail = dark #004d38
+            var len = SnakeBody.pieces.length;
+            for (var ci = 0; ci < len; ci++) {
+                var t = len > 1 ? ci / (len - 1) : 0;
+                var r = Math.round(57  * (1 - t));
+                var g = Math.round(255 * (1 - t) + 77  * t);
+                var b = Math.round(20  * (1 - t) + 56  * t);
+                SnakeBody.pieces[ci].bgColor     = 'rgba(' + r + ', ' + g + ', ' + b + ', 1)';
+                SnakeBody.pieces[ci].shadowColor = '#39ff14';
+                SnakeBody.pieces[ci].shadowBlur  = Math.round(18 * (1 - t) + 3);
             }
 
             SnakeBody.Rendering = false;
@@ -134,8 +143,9 @@ Engine.Entities['SnakeBody'] = function(){
         //initialize entity, reset pieces of snake, set center canvas, set snake to move left, create the first piece a snake
         init : function(){
             SnakeBody.pieces = [];
-            SnakeBody.centerX = Engine.Context.Canvas.clientWidth / 2;
-            SnakeBody.centerY = Engine.Context.Canvas.clientWidth / 2;
+            var step = SnakeBody.config.size;
+            SnakeBody.centerX = Math.floor(Engine.Context.Canvas.clientWidth  / 2 / step) * step;
+            SnakeBody.centerY = Math.floor(Engine.Context.Canvas.clientHeight / 2 / step) * step;
             SnakeBody.MoveLeft();
             SnakeBody.AddPiece();
         }
